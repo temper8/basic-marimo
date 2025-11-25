@@ -8,7 +8,15 @@ app = marimo.App()
 def _():
     import marimo as mo
     import math as math
-    return (math,)
+    return math, mo
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""
+    ## Илюстрация использования Matplotlib для построения графиков
+    """)
+    return
 
 
 @app.cell
