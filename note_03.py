@@ -9,7 +9,6 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
-
     return mo, np, plt
 
 
@@ -23,17 +22,17 @@ def _(np):
         x = np.linspace(x_min, x_max, width)
         y = np.linspace(y_min, y_max, height)
         c = x + 1j * y[:, None]
-    
+
         # Инициализируем массив z
         z = np.zeros_like(c)
         mandelbrot_set = np.zeros(c.shape, dtype=int)
-    
+
         # Векторизованное вычисление
         for i in range(max_iter):
             mask = np.abs(z) <= 2
             z[mask] = z[mask]**2 + c[mask]
             mandelbrot_set[mask] = i
-    
+
         return mandelbrot_set
     return (mandelbrot_vectorized,)
 
@@ -54,7 +53,7 @@ def _(mandelbrot_set, mo, plt, x_max, x_min, y_max, y_min):
     fig = plt.figure(figsize=(8, 6))
     ax = fig.subplots()
     ax.imshow(mandelbrot_set, extent=[x_min, x_max, y_min, y_max], cmap='hot')
-    ax.set_title('Манделььброт. Цветовая схема: hot')
+    ax.set_title('Мандельброт. Цветовая схема: hot')
     #ax.colorbar()
     mo.as_html(ax)
     return
