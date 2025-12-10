@@ -45,7 +45,7 @@ def _(mandelbrot_vectorized):
     y_min, y_max = -1.25, 1.25
     max_iter = 50
     mandelbrot_set = mandelbrot_vectorized(width, height, x_min, x_max, y_min, y_max, max_iter)
-    return mandelbrot_set, x_max, x_min, y_max, y_min
+    return height, mandelbrot_set, max_iter, width, x_max, x_min, y_max, y_min
 
 
 @app.cell
@@ -56,6 +56,63 @@ def _(mandelbrot_set, mo, plt, x_max, x_min, y_max, y_min):
     ax.set_title('Мандельброт. Цветовая схема: hot')
     #ax.colorbar()
     mo.as_html(ax)
+    return (fig,)
+
+
+@app.cell
+def _(np):
+    def mandelbrot(c, max_iter):
+        """
+        Вычисляет количество итераций для точки c до расхождения
+        """
+        z = 0
+        for n in range(max_iter):
+            if abs(z) > 2:
+                return n
+            z = z*z + c
+        return max_iter
+    
+    def generate_mandelbrot(width, height, x_min, x_max, y_min, y_max, max_iter):
+        """
+        Генерирует массив значений для множества Мандельброта
+        """
+        # Создаем сетку комплексных чисел
+        x = np.linspace(x_min, x_max, width)
+        y = np.linspace(y_min, y_max, height)
+        mandelbrot_set = np.zeros((height, width))
+    
+        # Вычисляем значение для каждой точки
+        for i in range(height):
+            for j in range(width):
+                mandelbrot_set[i, j] = mandelbrot(x[j] + 1j*y[i], max_iter)
+    
+        return mandelbrot_set
+    return (generate_mandelbrot,)
+
+
+@app.cell
+def _(
+    generate_mandelbrot,
+    height,
+    max_iter,
+    width,
+    x_max,
+    x_min,
+    y_max,
+    y_min,
+):
+    mandelbrot_set2 = generate_mandelbrot(width, height, x_min, x_max, y_min, y_max, max_iter)
+    return (mandelbrot_set2,)
+
+
+@app.cell
+def _(fig, mandelbrot_set2, mo, plt, x_max, x_min, y_max, y_min):
+    fig2 = plt.figure(figsize=(8, 6))
+    ax2 = fig.subplots()
+    ax2.imshow(mandelbrot_set2, extent=[x_min, x_max, y_min, y_max], cmap='hot')
+    ax2.set_title('Мандельброт. Цветовая схема: hot')
+    #ax.colorbar()
+    mo.as_html(ax2)
     return
 
 
